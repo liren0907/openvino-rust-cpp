@@ -1,0 +1,26 @@
+[workspace]
+members = [
+    "crates/openvino-vision-sys",
+    "crates/openvino-vision",
+    "tools/create_gallery",
+    "tools/action_event_metrics",
+    "examples/smart_classroom_rs",
+    "examples/example_face_detection",
+    "examples/example_action_detection",
+    "examples/example_tracking",
+    "examples/example_face_reid",
+    "crates/tui",
+]
+default-members = [
+    "crates/openvino-vision-sys",
+    "crates/openvino-vision",
+    "tools/create_gallery",
+    "tools/action_event_metrics",
+]
+resolver = "2"
+
+[workspace.package]
+edition = "2024"
+license = "Apache-2.0"
+repository = "https://github.com/liren0907/openvino-rust-cpp"
+authors = ["liren0907"]

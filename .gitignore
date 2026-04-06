@@ -1,0 +1,52 @@
+# Rust
+/target/
+Cargo.lock
+
+# C++ / CMake
+# Build directories
+build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cmake
+
+# Compiled objects / libraries / executables
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+
+# IDE / Editor
+.vscode/
+.idea/
+*.xcworkspace
+*.xcodeproj
+xcuserdata/
+*.swp
+*.swo
+*~
+.DS_Store
+._*
+.claude/
+
+# Others
+test_frame_lifetime
+*.log
+*.tmp
+deprecated/
+
+# Assets
+assets/
+archive/
+
+# Local development
+output/
+models/

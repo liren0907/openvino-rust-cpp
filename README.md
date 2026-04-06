@@ -1,5 +1,7 @@
 # OpenVINO Vision
 
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
 Real-time AI inference library for classroom analytics using [Intel OpenVINO](https://docs.openvino.ai/). Detects student actions (sitting, standing, raising hand), recognizes faces, and tracks people across video frames.
 
 Dual-language architecture: C++ provides the core inference engine (`libopenvino_vision`); Rust provides safe idiomatic bindings via CXX bridge with a builder-pattern API.
@@ -7,7 +9,6 @@ Dual-language architecture: C++ provides the core inference engine (`libopenvino
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
-- [Project Structure](#project-structure)
 - [Building](#building)
 - [Model Setup](#model-setup)
 - [Face Gallery Setup](#face-gallery-setup)
@@ -31,41 +32,45 @@ Dual-language architecture: C++ provides the core inference engine (`libopenvino
 brew install opencv openvino gflags cmake
 ```
 
-### Model Download Tools
+### Model Download Tools (openvino-dev)
+
+Models are downloaded using Intel's [Open Model Zoo](https://github.com/openvinotoolkit/open_model_zoo) CLI tools, which are part of the `openvino-dev` Python package.
 
 ```bash
 pip install openvino-dev[onnx,tensorflow]
 ```
 
-This provides `omz_downloader` and `omz_converter` for downloading pre-trained models.
+This installs two key tools:
 
-## Project Structure
+- **`omz_downloader`** — Downloads pre-trained models from Intel's Open Model Zoo catalog
+- **`omz_converter`** — Converts downloaded models to OpenVINO IR format (`.xml` + `.bin`) for inference
 
+**Download all models listed in `models.lst`:**
+
+```bash
+omz_downloader --list models.lst -o assets/
 ```
-tutorials/
-├── cpp/                       # C++ library (libopenvino_vision)
-│   ├── include/openvino_vision/   # Namespaced public headers
-│   │   ├── common/                # Utility headers (images_capture, slog, etc.)
-│   │   └── ffi/                   # CXX bridge header (bridge.hpp)
-│   ├── src/                       # Library implementation
-│   └── ffi/                       # CXX bridge C++ implementation (bridge.cpp)
-├── crates/
-│   ├── openvino-vision-sys/   # Raw CXX FFI bindings (bridge definitions + build.rs)
-│   └── openvino-vision/       # Safe Rust wrapper (builder pattern API)
-├── examples/
-│   ├── smart_classroom/       # C++ example (uses gflags for CLI)
-│   └── smart_classroom_rs/    # Rust example (uses clap for CLI)
-├── tools/                     # Rust CLI utilities
-│   ├── create_gallery/        # Generate faces_gallery.json from face images
-│   └── action_event_metrics/  # Detection evaluation metrics
-├── assets/
-│   ├── data/                  # Test videos and faces_gallery.json
-│   ├── face_db/               # Face images organized by identity
-│   ├── intel/                 # Pre-trained Intel models
-│   └── public/                # Pre-trained public models
-├── archive/reference/         # Legacy/historical implementations
-└── docs/                      # Documentation assets
+
+**Convert downloaded models to OpenVINO IR format:**
+
+```bash
+omz_converter --list models.lst -o assets/
 ```
+
+You can also download individual models by name:
+
+```bash
+# Download a specific model
+omz_downloader --name face-detection-adas-0001 -o assets/
+
+# Convert it to IR format
+omz_converter --name face-detection-adas-0001 -o assets/
+
+# List all available models
+omz_downloader --print_all
+```
+
+After downloading and converting, models will be available under `assets/intel/` (Intel models) and `assets/public/` (public models) in FP32, FP16, and FP16-INT8 precision variants.
 
 ## Building
 
@@ -102,16 +107,7 @@ cmake .. -DOpenVINO_DIR=/path/to/openvino -DOpenCV_DIR=/path/to/opencv
 
 ## Model Setup
 
-### Download models with Open Model Zoo
-
-```bash
-omz_downloader --list models.lst -o assets/
-omz_converter --list models.lst -o assets/
-```
-
-### Available Models
-
-Models are available in FP32, FP16, and FP16-INT8 precision variants under `assets/intel/`:
+This project uses the following models (available in FP32, FP16, and FP16-INT8 precision variants under `assets/intel/`). See [Model Download Tools](#model-download-tools-openvino-dev) for how to download them.
 
 | Model | Purpose |
 |-------|---------|
@@ -184,9 +180,11 @@ All FFI functions return `Result`. C++ exceptions are caught via try/catch and c
 | Module | Key types |
 |--------|-----------|
 | `detector` | `FaceDetector`, `ActionDetector`, `Detection`, `ActionResult` |
-| `tracker` | `Tracker`, `TrackerConfig`, `TrackedResult` |
+| `tracker` | `Tracker`, `TrackerConfig`, `TrackedResult`, `ActiveTrack`, `TrackPoint` |
 | `reid` | `FaceGallery`, `FaceGalleryBuilder` |
+| `landmarks` | `LandmarksDetector`, `LandmarksDetectorBuilder`, `FaceLandmarks`, `LandmarkPoint` |
 | `video` | `Video`, `Frame` |
+| `output` | `AnnotatedFrame`, `VideoWriter`, `Color` |
 | `model` | `Device` (Cpu, Gpu, Auto) |
 | `error` | `Error`, `Result` |
 

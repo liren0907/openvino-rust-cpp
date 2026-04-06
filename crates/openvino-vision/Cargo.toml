@@ -1,0 +1,15 @@
+[package]
+name = "openvino-vision"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Safe Rust wrapper for OpenVINO computer vision inference (face detection, tracking, action recognition)"
+keywords = ["openvino", "computer-vision", "face-detection", "inference", "tracking"]
+categories = ["computer-vision", "multimedia::video"]
+
+[dependencies]
+openvino-vision-sys = { path = "../openvino-vision-sys" }
+cxx = "1.0"
+thiserror = "2"
