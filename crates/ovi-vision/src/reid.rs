@@ -3,11 +3,11 @@ use crate::model::Device;
 use crate::video::Frame;
 use crate::Core;
 
-pub use openvino_vision_sys::Detection;
+pub use ovi_vision_sys::Detection;
 
 /// Face gallery for re-identification.
 pub struct FaceGallery {
-    pub(crate) inner: cxx::UniquePtr<openvino_vision_sys::FaceGalleryWrapper>,
+    pub(crate) inner: cxx::UniquePtr<ovi_vision_sys::FaceGalleryWrapper>,
 }
 
 /// Builder for creating a FaceGallery.
@@ -62,7 +62,7 @@ impl FaceGalleryBuilder {
     pub fn greedy_matching(mut self, g: bool) -> Self { self.greedy_matching = g; self }
 
     pub fn build(self, core: &Core) -> Result<FaceGallery> {
-        let inner = openvino_vision_sys::create_gallery(
+        let inner = ovi_vision_sys::create_gallery(
             &core.inner,
             &self.gallery_path,
             &self.fd_model,
@@ -94,27 +94,27 @@ impl FaceGallery {
 
     /// Identify faces using a Frame reference.
     pub fn identify_frame(&mut self, frame: &Frame<'_>, faces: &Vec<Detection>) -> Result<Vec<i32>> {
-        Ok(openvino_vision_sys::identify_faces_frame(self.inner.pin_mut(), &frame.inner, faces)?)
+        Ok(ovi_vision_sys::identify_faces_frame(self.inner.pin_mut(), &frame.inner, faces)?)
     }
 
     /// Get the label string for a gallery ID.
     pub fn label(&self, id: i32) -> Result<String> {
-        Ok(openvino_vision_sys::get_gallery_label(&self.inner, id)?)
+        Ok(ovi_vision_sys::get_gallery_label(&self.inner, id)?)
     }
 
     /// Number of identities in the gallery.
     pub fn size(&self) -> i32 {
-        openvino_vision_sys::gallery_size(&self.inner)
+        ovi_vision_sys::gallery_size(&self.inner)
     }
 
     /// Get all label strings in the gallery.
     pub fn all_labels(&self) -> Result<Vec<String>> {
-        Ok(openvino_vision_sys::gallery_get_all_labels(&self.inner)?)
+        Ok(ovi_vision_sys::gallery_get_all_labels(&self.inner)?)
     }
 
     /// Check if a label exists in the gallery.
     pub fn label_exists(&self, label: &str) -> Result<bool> {
-        Ok(openvino_vision_sys::gallery_label_exists(&self.inner, label)?)
+        Ok(ovi_vision_sys::gallery_label_exists(&self.inner, label)?)
     }
 }
 

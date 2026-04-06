@@ -10,9 +10,9 @@
 
 #include <opencv2/opencv.hpp>
 
-#include "openvino_vision/face_reid.hpp"
-#include "openvino_vision/tracker.hpp"
-#include "openvino_vision/common/slog.hpp"
+#include "ovi/vision/face_reid.hpp"
+#include "ovi/vision/tracker.hpp"
+#include "ovi/core/slog.hpp"
 
 namespace {
     float ComputeReidDistance(const cv::Mat& descr1, const cv::Mat& descr2) {

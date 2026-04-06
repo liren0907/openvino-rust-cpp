@@ -12,9 +12,9 @@
 
 #include "openvino/openvino.hpp"
 
-#include "openvino_vision/cnn.hpp"
-#include "openvino_vision/common/slog.hpp"
-#include "openvino_vision/common/openvino_utils.hpp"
+#include "ovi/vision/cnn.hpp"
+#include "ovi/core/slog.hpp"
+#include "ovi/core/openvino_utils.hpp"
 
 CnnDLSDKBase::CnnDLSDKBase(const Config& config) : m_config(config) {}
 

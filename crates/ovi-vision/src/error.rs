@@ -1,4 +1,4 @@
-/// Errors that can occur when using openvino-vision.
+/// Errors that can occur when using ovi-vision.
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error("Failed to load model: {0}")]

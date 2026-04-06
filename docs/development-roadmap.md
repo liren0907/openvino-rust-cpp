@@ -43,18 +43,9 @@
 | Performance metrics | Open | C++ has `performance_metrics.hpp` for timing; not exposed | No built-in profiling from Rust |
 | Logging/debugging | Open | C++ has `DetectionsLogger` (XML/CSV output) and `slog.hpp`; not exposed | No structured logging from Rust side |
 
-### B. Deprecated methods to clean up
+### B. ~~Deprecated methods to clean up~~ — **Done**
 
-4 methods still present for backwards compatibility (all have `_frame` replacements):
-
-| Method | Replacement |
-|--------|-------------|
-| `FaceDetector::detect(&Video)` | `detect_frame(&Frame)` |
-| `ActionDetector::detect(&Video)` | `detect_frame(&Frame)` |
-| `Tracker::process(&Video)` | `process_frame(&Frame)` |
-| `FaceGallery::identify(&Video)` | `identify_frame(&Frame)` |
-
-These can be removed in the next breaking version.
+Removed in the `ovi` migration (breaking change). The 4 deprecated `&Video` methods and `deprecated.rs` module have been deleted.
 
 ### C. Publishing readiness
 
@@ -101,9 +92,17 @@ Prepare the crate for public consumption:
 6. Create CHANGELOG.md
 7. Remove deprecated `&Video` methods (breaking change → bump to 0.2.0)
 
-### Direction 3: `ovi` architecture migration
+### Direction 3: `ovi` architecture migration — **Phase 1 Done**
 
-Restructure the project for multimodal expansion. Full plan documented in [architecture-plan.md](architecture-plan.md). Summary: rename repo to `openvino-rust-cpp`, extract `ovi-core`, rename crates to `ovi-*`, restructure C++ includes under `ovi/`, create umbrella crate with feature flags.
+Phase 1 (rename) is complete:
+- C++ headers moved to `ovi/core/` and `ovi/vision/`
+- Rust crates renamed to `ovi-vision-sys` and `ovi-vision`
+- CMake targets renamed to `ovi_vision` and `ovi_vision_ffi`
+- Deprecated `&Video` methods removed
+
+Remaining phases (documented in [architecture-plan.md](architecture-plan.md)):
+- Phase 2: Create `ovi` umbrella crate with feature flags
+- Phase 3: Add new domains (`ovi-audio`, `ovi-llm`) when needed
 
 ---
 
@@ -111,17 +110,9 @@ Restructure the project for multimodal expansion. Full plan documented in [archi
 
 Direction 1 is mostly complete — the high-impact API gaps (landmarks, tracker, camera, gallery) are filled. The remaining gaps (per-action confidence, batch inference, metrics, logging) are lower priority and can be addressed incrementally.
 
-**Immediate priority: Direction 2 (publishing foundation)**
+Direction 2 (publishing foundation) is done — LICENSE, Cargo.toml metadata, deprecated methods removed.
 
-The crate is now functionally complete enough to publish. Focus on:
-1. LICENSE file + Cargo.toml metadata
-2. CI/CD pipeline (GitHub Actions)
-3. Expanded test coverage
-4. Remove deprecated `&Video` methods (breaking change → 0.2.0)
-
-**Then: Direction 3 (ovi migration)**
-
-Only after vision is published and stable. This is a large refactor that touches every file — don't combine with API work.
+**Next: Direction 3 Phase 2 (umbrella crate) or Direction 1 remaining gaps, depending on priorities.**
 
 ---
 

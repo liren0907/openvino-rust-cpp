@@ -10,8 +10,8 @@
 
 #include <opencv2/core/core.hpp>
 
-#include "openvino_vision/cnn.hpp"
-#include "openvino_vision/detector.hpp"
+#include "ovi/vision/cnn.hpp"
+#include "ovi/vision/detector.hpp"
 
 enum class RegistrationStatus {
   SUCCESS,

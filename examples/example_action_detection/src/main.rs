@@ -1,5 +1,5 @@
 use clap::Parser;
-use openvino_vision::{ActionDetector, AnnotatedFrame, Color, Core, Video, VideoWriter};
+use ovi_vision::{ActionDetector, AnnotatedFrame, Color, Core, Video, VideoWriter};
 
 #[derive(Parser)]
 #[command(name = "example_action_detection", about = "Action Detection Example")]
@@ -37,7 +37,7 @@ struct Args {
     read_limit: u32,
 }
 
-fn main() -> openvino_vision::Result<()> {
+fn main() -> ovi_vision::Result<()> {
     let args = Args::parse();
 
     println!("Initializing OpenVINO Core...");

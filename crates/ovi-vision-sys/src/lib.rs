@@ -80,7 +80,7 @@ mod ffi {
     }
 
     unsafe extern "C++" {
-        include!("openvino_vision/ffi/bridge.hpp");
+        include!("ovi/vision/ffi/bridge.hpp");
 
         // Opaque types
         type OvCore;
@@ -109,7 +109,6 @@ mod ffi {
             confidence: f32, input_h: i32, input_w: i32,
             expand_ratio: f32,
         ) -> Result<UniquePtr<FaceDetectorWrapper>>;
-        fn detect_faces(det: Pin<&mut FaceDetectorWrapper>, frame: &FrameDataWrapper) -> Result<Vec<Detection>>;
         fn detect_faces_frame(det: Pin<&mut FaceDetectorWrapper>, frame: &FrameRef) -> Result<Vec<Detection>>;
 
         // Action Detection
@@ -117,17 +116,10 @@ mod ffi {
             core: &OvCore, model: &str, device: &str,
             det_thresh: f32, act_thresh: f32, num_actions: u32,
         ) -> Result<UniquePtr<ActionDetectorWrapper>>;
-        fn detect_actions(det: Pin<&mut ActionDetectorWrapper>, frame: &FrameDataWrapper) -> Result<Vec<ActionResult>>;
         fn detect_actions_frame(det: Pin<&mut ActionDetectorWrapper>, frame: &FrameRef) -> Result<Vec<ActionResult>>;
 
         // Tracking
         fn create_tracker(config: &TrackerConfig) -> Result<UniquePtr<ObjectTrackerWrapper>>;
-        fn track(
-            tracker: Pin<&mut ObjectTrackerWrapper>,
-            detections: &Vec<Detection>,
-            frame_idx: i32,
-            frame: &FrameDataWrapper,
-        ) -> Result<Vec<TrackedResult>>;
         fn track_frame(
             tracker: Pin<&mut ObjectTrackerWrapper>,
             detections: &Vec<Detection>,
@@ -163,11 +155,6 @@ mod ffi {
             reid_threshold: f64, min_size_fr: i32, crop_gallery: bool,
             greedy_matching: bool,
         ) -> Result<UniquePtr<FaceGalleryWrapper>>;
-        fn identify_faces(
-            gallery: Pin<&mut FaceGalleryWrapper>,
-            frame: &FrameDataWrapper,
-            faces: &Vec<Detection>,
-        ) -> Result<Vec<i32>>;
         fn identify_faces_frame(
             gallery: Pin<&mut FaceGalleryWrapper>,
             frame: &FrameRef,

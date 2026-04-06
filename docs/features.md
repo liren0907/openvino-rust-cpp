@@ -147,7 +147,7 @@ A dual-language (C++ and Rust) real-time AI inference library focused on compute
 
 - CMake 3.10+ with C++17 standard
 - Auto-detects macOS Homebrew paths for OpenCV and OpenVINO
-- Builds as a static library (`libopenvino_vision`)
+- Builds as a static library (`libovi_vision`)
 
 ### Rust Workspace
 
@@ -199,7 +199,7 @@ cargo build
 Run pure Rust unit tests to verify basic types (`Device`, `TrackerConfig`, `Error`):
 
 ```bash
-cargo test -p openvino-vision
+cargo test -p ovi-vision
 ```
 
 ### Step 2: Face Detection

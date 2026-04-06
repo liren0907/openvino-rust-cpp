@@ -3,7 +3,7 @@ use crate::video::Frame;
 
 /// A mutable clone of a video frame for drawing annotations.
 pub struct AnnotatedFrame {
-    pub(crate) inner: cxx::UniquePtr<openvino_vision_sys::AnnotatedFrame>,
+    pub(crate) inner: cxx::UniquePtr<ovi_vision_sys::AnnotatedFrame>,
 }
 
 /// Color for drawing operations (RGB).
@@ -26,7 +26,7 @@ impl Color {
 impl AnnotatedFrame {
     /// Clone the current video frame for drawing annotations.
     pub fn from_frame(frame: &Frame<'_>) -> Result<Self> {
-        let inner = openvino_vision_sys::clone_frame_for_drawing(&frame.inner)?;
+        let inner = ovi_vision_sys::clone_frame_for_drawing(&frame.inner)?;
         Ok(Self { inner })
     }
 
@@ -40,7 +40,7 @@ impl AnnotatedFrame {
         label: &str,
         color: Color,
     ) -> Result<()> {
-        openvino_vision_sys::draw_detection(
+        ovi_vision_sys::draw_detection(
             self.inner.pin_mut(),
             x,
             y,
@@ -57,19 +57,19 @@ impl AnnotatedFrame {
 
 /// Writes annotated frames to an output MP4 video file.
 pub struct VideoWriter {
-    inner: cxx::UniquePtr<openvino_vision_sys::VideoWriterWrapper>,
+    inner: cxx::UniquePtr<ovi_vision_sys::VideoWriterWrapper>,
 }
 
 impl VideoWriter {
     /// Create a new video writer. The output file is created lazily on the first write.
     pub fn new(path: &str, fps: f64) -> Result<Self> {
-        let inner = openvino_vision_sys::create_video_writer(path, fps)?;
+        let inner = ovi_vision_sys::create_video_writer(path, fps)?;
         Ok(Self { inner })
     }
 
     /// Write an annotated frame to the output video.
     pub fn write(&mut self, frame: &AnnotatedFrame) -> Result<()> {
-        openvino_vision_sys::write_frame(self.inner.pin_mut(), &frame.inner)?;
+        ovi_vision_sys::write_frame(self.inner.pin_mut(), &frame.inner)?;
         Ok(())
     }
 }

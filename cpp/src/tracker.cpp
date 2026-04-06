@@ -11,8 +11,8 @@
 #include <utility>
 #include <unordered_map>
 
-#include "openvino_vision/logger.hpp"
-#include "openvino_vision/tracker.hpp"
+#include "ovi/vision/logger.hpp"
+#include "ovi/vision/tracker.hpp"
 
 const int TrackedObject::UNKNOWN_LABEL_IDX = -1;
 

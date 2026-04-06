@@ -12,9 +12,9 @@
 
 #include "openvino/openvino.hpp"
 
-#include "openvino_vision/action_detector.hpp"
-#include "openvino_vision/common/slog.hpp"
-#include "openvino_vision/common/openvino_utils.hpp"
+#include "ovi/vision/action_detector.hpp"
+#include "ovi/core/slog.hpp"
+#include "ovi/core/openvino_utils.hpp"
 
 #define SSD_LOCATION_RECORD_SIZE 4
 #define SSD_PRIORBOX_RECORD_SIZE 4

@@ -7,5 +7,5 @@ authors.workspace = true
 publish = false
 
 [dependencies]
-openvino-vision = { path = "../../crates/openvino-vision" }
+ovi-vision = { path = "../../crates/ovi-vision" }
 clap = { version = "4", features = ["derive"] }

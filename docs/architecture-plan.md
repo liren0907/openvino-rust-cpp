@@ -1,4 +1,4 @@
-# Architecture Plan: From `openvino-vision` to `ovi`
+# Architecture Plan: From `ovi-vision` to `ovi`
 
 ## Background
 
@@ -26,14 +26,14 @@ This project provides a dual-language (C++ and Rust) inference framework built o
 ## Current State
 
 ```
-openvino-rust-cpp/                     # GitHub repo (was openvino-vision)
+openvino-rust-cpp/                     # GitHub repo (was ovi-vision)
 ├── cpp/                              # Single C++ library (vision only)
-│   ├── include/openvino_vision/      # All headers under one namespace
+│   ├── include/ovi_vision/      # All headers under one namespace
 │   ├── src/
 │   └── ffi/                          # CXX bridge layer
 ├── crates/
-│   ├── openvino-vision-sys/          # FFI bindings
-│   ├── openvino-vision/              # Safe Rust API (includes Core, Device, Error)
+│   ├── ovi-vision-sys/          # FFI bindings
+│   ├── ovi-vision/              # Safe Rust API (includes Core, Device, Error)
 │   └── tui/                          # Terminal UI
 ├── examples/
 └── tools/
@@ -41,8 +41,8 @@ openvino-rust-cpp/                     # GitHub repo (was openvino-vision)
 
 ### Problems with current structure
 
-- `Core`, `Device`, `Error` live inside `openvino-vision` but are not vision-specific — they are OpenVINO fundamentals shared across all domains
-- C++ headers all live under a single `openvino_vision/` prefix with no domain separation
+- `Core`, `Device`, `Error` live inside `ovi-vision` but are not vision-specific — they are OpenVINO fundamentals shared across all domains
+- C++ headers all live under a single `ovi_vision/` prefix with no domain separation
 - No clear separation point for adding audio/LLM modules
 
 ## Proposed Architecture
@@ -141,7 +141,7 @@ openvino-rust-cpp/                     # GitHub repo name (for discoverability)
 
 **Before:**
 ```rust
-use openvino_vision::{Core, Device, FaceDetector};
+use ovi_vision::{Core, Device, FaceDetector};
 ```
 
 **After:**
@@ -291,8 +291,8 @@ With `cpp/include/` as the single include root, `#include <ovi/core/cnn.hpp>` re
 Phase 1 — Foundation (do now):
 
 1. Extract `Core`, `Device`, `Error` into `ovi-core`
-2. Rename C++ include prefix from `openvino_vision/` to `ovi/vision/` (+ `ovi/core/`)
-3. Rename Rust crates: `openvino-vision` → `ovi-vision`, `openvino-vision-sys` → `ovi-vision-sys`
+2. Rename C++ include prefix from `ovi_vision/` to `ovi/vision/` (+ `ovi/core/`)
+3. Rename Rust crates: `ovi-vision` → `ovi-vision`, `ovi-vision-sys` → `ovi-vision-sys`
 4. Split C++ source into `cpp/core/` and `cpp/vision/`
 5. Update `build.rs` to build both `ovi_core` and `ovi_vision`
 
@@ -308,7 +308,7 @@ Phase 3 — New domains (do when needed):
 
 ## Repository naming
 
-Rename the repository from `openvino-vision` to `openvino-rust-cpp`. This reflects the broader scope and dual-language nature. On crates.io:
+Rename the repository from `ovi-vision` to `openvino-rust-cpp`. This reflects the broader scope and dual-language nature. On crates.io:
 
 - `ovi` — umbrella
 - `ovi-core` — shared types

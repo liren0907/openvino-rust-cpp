@@ -4,7 +4,7 @@
 
 Real-time AI inference library for classroom analytics using [Intel OpenVINO](https://docs.openvino.ai/). Detects student actions (sitting, standing, raising hand), recognizes faces, and tracks people across video frames.
 
-Dual-language architecture: C++ provides the core inference engine (`libopenvino_vision`); Rust provides safe idiomatic bindings via CXX bridge with a builder-pattern API.
+Dual-language architecture: C++ provides the core inference engine (`libovi_vision`); Rust provides safe idiomatic bindings via CXX bridge with a builder-pattern API.
 
 ## Table of Contents
 
@@ -76,12 +76,12 @@ After downloading and converting, models will be available under `assets/intel/`
 
 ### Rust (recommended)
 
-The project uses a Cargo workspace. The `openvino-vision-sys` crate's `build.rs` invokes CMake internally to compile the C++ library and FFI bridge.
+The project uses a Cargo workspace. The `ovi-vision-sys` crate's `build.rs` invokes CMake internally to compile the C++ library and FFI bridge.
 
 ```bash
 cargo build                              # Build default members (crates + tools)
-cargo build -p openvino-vision-sys       # Build raw CXX FFI bindings
-cargo build -p openvino-vision           # Build safe Rust wrapper
+cargo build -p ovi-vision-sys       # Build raw CXX FFI bindings
+cargo build -p ovi-vision           # Build safe Rust wrapper
 cargo build -p smart-classroom-rs        # Build Rust example
 ```
 
@@ -126,12 +126,12 @@ Face recognition requires a gallery JSON file mapping identities to reference im
 
 ## Rust API
 
-The `openvino-vision` crate provides a safe, ergonomic Rust API with builder pattern, `Frame`-based lifetime safety, and async inference support.
+The `ovi-vision` crate provides a safe, ergonomic Rust API with builder pattern, `Frame`-based lifetime safety, and async inference support.
 
 ### Basic usage
 
 ```rust
-use openvino_vision::{Core, FaceDetector, Video};
+use ovi_vision::{Core, FaceDetector, Video};
 
 let core = Core::new()?;
 let mut detector = FaceDetector::builder("model.xml")
@@ -173,7 +173,7 @@ loop {
 
 ### Error handling
 
-All FFI functions return `Result`. C++ exceptions are caught via try/catch and converted to `cxx::Exception`, which maps to `openvino_vision::Error::Cxx`.
+All FFI functions return `Result`. C++ exceptions are caught via try/catch and converted to `cxx::Exception`, which maps to `ovi_vision::Error::Cxx`.
 
 ### Modules
 
@@ -225,7 +225,7 @@ cd examples/smart_classroom/build
 Pure Rust tests that do not require OpenVINO runtime:
 
 ```bash
-cargo test -p openvino-vision
+cargo test -p ovi-vision
 ```
 
 Tests cover: `Device::as_str()` correctness, `Device::default()`, `TrackerConfig::default()` values, and `Error` display messages.

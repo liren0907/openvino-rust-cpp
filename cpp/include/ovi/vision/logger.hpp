@@ -10,9 +10,9 @@
 #include <vector>
 
 #include <opencv2/opencv.hpp>
-#include <openvino_vision/common/slog.hpp>
-#include "openvino_vision/actions.hpp"
-#include "openvino_vision/tracker.hpp"
+#include <ovi/core/slog.hpp>
+#include "ovi/vision/actions.hpp"
+#include "ovi/vision/tracker.hpp"
 
 class DetectionsLogger {
 private:

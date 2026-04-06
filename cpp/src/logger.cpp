@@ -9,7 +9,7 @@
 #include <vector>
 #include <fstream>
 
-#include "openvino_vision/logger.hpp"
+#include "ovi/vision/logger.hpp"
 
 namespace {
 

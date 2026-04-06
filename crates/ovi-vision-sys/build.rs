@@ -25,7 +25,7 @@ fn main() {
     let cxx_include_path = out_dir.join("cxxbridge").join("include");
 
     // --- Step 2: Build C++ via CMake ---
-    // We build the ffi bridge + openvino_vision library together.
+    // We build the ffi bridge + ovi_vision library together.
     // The ffi/CMakeLists.txt pulls in the parent cpp/ library.
     let cpp_lib_dst = cmake::Config::new(&ffi_dir)
         .define("CXX_INCLUDE_DIR", &cxx_include_path)
@@ -38,13 +38,13 @@ fn main() {
         "cargo:rustc-link-search=native={}",
         cpp_lib_dst.join("lib").display()
     );
-    // openvino_vision is built via add_subdirectory
+    // ovi_vision is built via add_subdirectory
     println!(
         "cargo:rustc-link-search=native={}",
-        cpp_lib_dst.join("build").join("openvino_vision_build").display()
+        cpp_lib_dst.join("build").join("ovi_vision_build").display()
     );
-    println!("cargo:rustc-link-lib=static=openvino_vision_ffi");
-    println!("cargo:rustc-link-lib=static=openvino_vision");
+    println!("cargo:rustc-link-lib=static=ovi_vision_ffi");
+    println!("cargo:rustc-link-lib=static=ovi_vision");
 
     // --- Step 4: Link External Dependencies ---
     if cfg!(target_os = "macos") {

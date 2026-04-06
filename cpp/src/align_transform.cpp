@@ -8,7 +8,7 @@
 
 #include <opencv2/imgproc.hpp>
 
-#include "openvino_vision/face_reid.hpp"
+#include "ovi/vision/face_reid.hpp"
 
 static const float h = 112.;
 static const float w = 96.;

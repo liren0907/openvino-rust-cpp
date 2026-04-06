@@ -1,7 +1,7 @@
 // Copyright (C) 2024 Intel Corporation
 // SPDX-License-Identifier: Apache-2.0
 //
-// CXX bridge header for openvino-vision-sys crate.
+// CXX bridge header for ovi-vision-sys crate.
 
 #pragma once
 
@@ -13,12 +13,12 @@
 #include <vector>
 
 #include "openvino/openvino.hpp"
-#include "openvino_vision/cnn.hpp"
-#include "openvino_vision/detector.hpp"
-#include "openvino_vision/action_detector.hpp"
-#include "openvino_vision/tracker.hpp"
-#include "openvino_vision/face_reid.hpp"
-#include "openvino_vision/common/images_capture.hpp"
+#include "ovi/vision/cnn.hpp"
+#include "ovi/vision/detector.hpp"
+#include "ovi/vision/action_detector.hpp"
+#include "ovi/vision/tracker.hpp"
+#include "ovi/vision/face_reid.hpp"
+#include "ovi/core/images_capture.hpp"
 
 // ====== Opaque wrapper types — MUST be defined BEFORE lib.rs.h ======
 
@@ -82,7 +82,7 @@ struct VideoWriterWrapper {
 };
 
 // ====== Include CXX generated header AFTER type definitions ======
-#include "openvino-vision-sys/src/lib.rs.h"
+#include "ovi-vision-sys/src/lib.rs.h"
 
 // ====== Factory / lifecycle function declarations ======
 
@@ -98,18 +98,12 @@ std::unique_ptr<FaceDetectorWrapper> create_face_detector(
     const OvCore& core, rust::Str model, rust::Str device,
     float confidence, int32_t input_h, int32_t input_w,
     float expand_ratio);
-rust::Vec<Detection> detect_faces(FaceDetectorWrapper& det, const FrameDataWrapper& frame);
 
 std::unique_ptr<ActionDetectorWrapper> create_action_detector(
     const OvCore& core, rust::Str model, rust::Str device,
     float det_thresh, float act_thresh, uint32_t num_actions);
-rust::Vec<ActionResult> detect_actions(ActionDetectorWrapper& det, const FrameDataWrapper& frame);
 
 std::unique_ptr<ObjectTrackerWrapper> create_tracker(const TrackerConfig& config);
-rust::Vec<TrackedResult> track(ObjectTrackerWrapper& tracker,
-                               const rust::Vec<Detection>& detections,
-                               int32_t frame_idx,
-                               const FrameDataWrapper& frame);
 
 std::unique_ptr<FaceGalleryWrapper> create_gallery(
     const OvCore& core,
@@ -120,10 +114,6 @@ std::unique_ptr<FaceGalleryWrapper> create_gallery(
     rust::Str reid_model, rust::Str reid_device,
     double reid_threshold, int32_t min_size_fr, bool crop_gallery,
     bool greedy_matching);
-rust::Vec<int32_t> identify_faces(
-    FaceGalleryWrapper& gallery,
-    const FrameDataWrapper& frame,
-    const rust::Vec<Detection>& faces);
 rust::String get_gallery_label(const FaceGalleryWrapper& gallery, int32_t id);
 int32_t gallery_size(const FaceGalleryWrapper& gallery);
 

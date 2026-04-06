@@ -9,7 +9,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 #include <openvino/openvino.hpp>
-#include <openvino_vision/common/slog.hpp>
+#include <ovi/core/slog.hpp>
 
 // Utility function to check if a size/shape is empty
 inline bool isSizeEmpty(const ov::Shape& shape) {

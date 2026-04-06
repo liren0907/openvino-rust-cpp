@@ -11,9 +11,9 @@
 
 #include "openvino/openvino.hpp"
 
-#include "openvino_vision/detector.hpp"
-#include "openvino_vision/common/slog.hpp"
-#include "openvino_vision/common/openvino_utils.hpp"
+#include "ovi/vision/detector.hpp"
+#include "ovi/core/slog.hpp"
+#include "ovi/core/openvino_utils.hpp"
 
 #define SSD_EMPTY_DETECTIONS_INDICATOR -1.0
 

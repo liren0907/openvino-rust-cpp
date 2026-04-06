@@ -12,7 +12,7 @@
 
 #include "openvino/openvino.hpp"
 
-#include "openvino_vision/common/ocv_common.hpp"
+#include "ovi/core/ocv_common.hpp"
 
 /**
 * @brief Base class of config for network

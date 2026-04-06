@@ -12,8 +12,8 @@
 #include <utility>
 #include <vector>
 
-#include "openvino_vision/common/kuhn_munkres.hpp"
-#include "openvino_vision/cnn.hpp"
+#include "ovi/core/kuhn_munkres.hpp"
+#include "ovi/vision/cnn.hpp"
 
 struct TrackedObject {
     cv::Rect rect;

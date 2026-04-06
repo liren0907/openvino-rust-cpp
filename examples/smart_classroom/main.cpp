@@ -1,7 +1,7 @@
 // Copyright (C) 2018-2024 Intel Corporation
 // SPDX-License-Identifier: Apache-2.0
 //
-// Smart Classroom Example — uses the openvino_vision library.
+// Smart Classroom Example — uses the ovi_vision library.
 
 #include <chrono>  // NOLINT
 
@@ -18,17 +18,17 @@
 #include "openvino/openvino.hpp"
 
 #include "gflags/gflags.h"
-#include "openvino_vision/common/images_capture.hpp"
-#include "openvino_vision/common/ocv_common.hpp"
-#include "openvino_vision/common/slog.hpp"
-#include "openvino_vision/cnn.hpp"
-#include "openvino_vision/actions.hpp"
-#include "openvino_vision/action_detector.hpp"
-#include "openvino_vision/detector.hpp"
-#include "openvino_vision/face_reid.hpp"
-#include "openvino_vision/tracker.hpp"
-#include "openvino_vision/logger.hpp"
-#include "openvino_vision/common/performance_metrics.hpp"
+#include "ovi/core/images_capture.hpp"
+#include "ovi/core/ocv_common.hpp"
+#include "ovi/core/slog.hpp"
+#include "ovi/vision/cnn.hpp"
+#include "ovi/vision/actions.hpp"
+#include "ovi/vision/action_detector.hpp"
+#include "ovi/vision/detector.hpp"
+#include "ovi/vision/face_reid.hpp"
+#include "ovi/vision/tracker.hpp"
+#include "ovi/vision/logger.hpp"
+#include "ovi/core/performance_metrics.hpp"
 
 // ========== gflags definitions (application-level, not in the library) ==========
 

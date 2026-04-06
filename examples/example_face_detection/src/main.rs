@@ -1,5 +1,5 @@
 use clap::Parser;
-use openvino_vision::{AnnotatedFrame, Color, Core, FaceDetector, Video, VideoWriter};
+use ovi_vision::{AnnotatedFrame, Color, Core, FaceDetector, Video, VideoWriter};
 
 #[derive(Parser)]
 #[command(name = "example_face_detection", about = "Face Detection Example")]
@@ -29,7 +29,7 @@ struct Args {
     read_limit: u32,
 }
 
-fn main() -> openvino_vision::Result<()> {
+fn main() -> ovi_vision::Result<()> {
     let args = Args::parse();
 
     println!("Initializing OpenVINO Core...");

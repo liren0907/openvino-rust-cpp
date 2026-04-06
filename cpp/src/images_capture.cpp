@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
-#include "openvino_vision/common/images_capture.hpp"
-#include "openvino_vision/common/slog.hpp"
+#include "ovi/core/images_capture.hpp"
+#include "ovi/core/slog.hpp"
 
 class VideoCapture : public ImagesCapture {
     cv::VideoCapture cap;

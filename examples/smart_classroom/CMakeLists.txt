@@ -9,12 +9,12 @@ if(APPLE)
     set(gflags_DIR "/opt/homebrew/lib/cmake/gflags" CACHE PATH "Path to gflags CMake config")
 endif()
 
-# Import the openvino_vision library
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../cpp openvino_vision_build)
+# Import the ovi_vision library
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../cpp ovi_vision_build)
 
 # Find gflags (only needed by the example, not the library)
 find_package(gflags REQUIRED)
 
 # Build the example executable
 add_executable(smart_classroom_example main.cpp)
-target_link_libraries(smart_classroom_example PRIVATE openvino_vision ${gflags_LIBRARIES})
+target_link_libraries(smart_classroom_example PRIVATE ovi_vision ${gflags_LIBRARIES})

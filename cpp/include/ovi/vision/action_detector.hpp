@@ -10,7 +10,7 @@
 
 #include <opencv2/core/core.hpp>
 
-#include "openvino_vision/cnn.hpp"
+#include "ovi/vision/cnn.hpp"
 
 #include "openvino/openvino.hpp"
 

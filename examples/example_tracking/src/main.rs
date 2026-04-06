@@ -1,5 +1,5 @@
 use clap::Parser;
-use openvino_vision::{
+use ovi_vision::{
     ActionDetector, AnnotatedFrame, Color, Core, Detection, FaceDetector, Tracker, TrackerConfig,
     Video, VideoWriter,
 };
@@ -58,14 +58,14 @@ enum DetectorMode {
 }
 
 impl DetectorMode {
-    fn enqueue(&mut self, frame: &openvino_vision::Frame<'_>) -> openvino_vision::Result<()> {
+    fn enqueue(&mut self, frame: &ovi_vision::Frame<'_>) -> ovi_vision::Result<()> {
         match self {
             DetectorMode::Face(d) => d.enqueue(frame),
             DetectorMode::Action(d) => d.enqueue(frame),
         }
     }
 
-    fn fetch_results(&mut self) -> openvino_vision::Result<Vec<Detection>> {
+    fn fetch_results(&mut self) -> ovi_vision::Result<Vec<Detection>> {
         match self {
             DetectorMode::Face(d) => d.fetch_results(),
             DetectorMode::Action(d) => {
@@ -86,7 +86,7 @@ impl DetectorMode {
     }
 }
 
-fn main() -> openvino_vision::Result<()> {
+fn main() -> ovi_vision::Result<()> {
     let args = Args::parse();
 
     // Validate mode and model args

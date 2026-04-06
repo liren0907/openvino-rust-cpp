@@ -1,7 +1,7 @@
 [workspace]
 members = [
-    "crates/openvino-vision-sys",
-    "crates/openvino-vision",
+    "crates/ovi-vision-sys",
+    "crates/ovi-vision",
     "tools/create_gallery",
     "tools/action_event_metrics",
     "examples/smart_classroom_rs",
@@ -12,8 +12,8 @@ members = [
     "crates/tui",
 ]
 default-members = [
-    "crates/openvino-vision-sys",
-    "crates/openvino-vision",
+    "crates/ovi-vision-sys",
+    "crates/ovi-vision",
     "tools/create_gallery",
     "tools/action_event_metrics",
 ]

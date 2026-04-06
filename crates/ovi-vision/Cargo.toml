@@ -1,5 +1,5 @@
 [package]
-name = "openvino-vision"
+name = "ovi-vision"
 version = "0.1.0"
 edition.workspace = true
 license.workspace = true
@@ -10,6 +10,6 @@ keywords = ["openvino", "computer-vision", "face-detection", "inference", "track
 categories = ["computer-vision", "multimedia::video"]
 
 [dependencies]
-openvino-vision-sys = { path = "../openvino-vision-sys" }
+ovi-vision-sys = { path = "../ovi-vision-sys" }
 cxx = "1.0"
 thiserror = "2"

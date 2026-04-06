@@ -3,7 +3,7 @@ use crate::model::Device;
 use crate::video::Frame;
 use crate::Core;
 
-pub use openvino_vision_sys::{Detection, FaceLandmarks, LandmarkPoint};
+pub use ovi_vision_sys::{Detection, FaceLandmarks, LandmarkPoint};
 
 /// Builder for creating a LandmarksDetector.
 pub struct LandmarksDetectorBuilder {
@@ -32,7 +32,7 @@ impl LandmarksDetectorBuilder {
     }
 
     pub fn build(self, core: &Core) -> Result<LandmarksDetector> {
-        let inner = openvino_vision_sys::create_landmarks_detector(
+        let inner = ovi_vision_sys::create_landmarks_detector(
             &core.inner,
             &self.model,
             self.device.as_str(),
@@ -47,7 +47,7 @@ impl LandmarksDetectorBuilder {
 /// Computes 5-point facial landmarks (left eye, right eye, nose, left mouth,
 /// right mouth) for detected faces in a frame.
 pub struct LandmarksDetector {
-    inner: cxx::UniquePtr<openvino_vision_sys::LandmarksDetectorWrapper>,
+    inner: cxx::UniquePtr<ovi_vision_sys::LandmarksDetectorWrapper>,
 }
 
 impl LandmarksDetector {
@@ -60,7 +60,7 @@ impl LandmarksDetector {
     /// Returns one `FaceLandmarks` per input `Detection`, each containing
     /// 5 normalized (x, y) landmark points.
     pub fn compute(&mut self, frame: &Frame<'_>, faces: &Vec<Detection>) -> Result<Vec<FaceLandmarks>> {
-        Ok(openvino_vision_sys::compute_landmarks(
+        Ok(ovi_vision_sys::compute_landmarks(
             self.inner.pin_mut(),
             &frame.inner,
             faces,

@@ -1,9 +1,9 @@
 // Copyright (C) 2024 Intel Corporation
 // SPDX-License-Identifier: Apache-2.0
 //
-// CXX bridge implementation for openvino-vision-sys crate.
+// CXX bridge implementation for ovi-vision-sys crate.
 
-#include "openvino_vision/ffi/bridge.hpp"
+#include "ovi/vision/ffi/bridge.hpp"
 
 #include <iostream>
 
@@ -78,30 +78,6 @@ std::unique_ptr<FaceDetectorWrapper> create_face_detector(
     return std::make_unique<FaceDetectorWrapper>(config);
 }
 
-rust::Vec<Detection> detect_faces(FaceDetectorWrapper& det, const FrameDataWrapper& frame) {
-    try {
-        det.detector->enqueue(frame.current_frame);
-        det.detector->submitRequest();
-        det.detector->wait();
-        auto results = det.detector->fetchResults();
-
-        rust::Vec<Detection> out;
-        for (const auto& r : results) {
-            Detection d;
-            d.x = r.rect.x;
-            d.y = r.rect.y;
-            d.width = r.rect.width;
-            d.height = r.rect.height;
-            d.confidence = r.confidence;
-            d.label = -1;
-            out.push_back(d);
-        }
-        return out;
-    } catch (const std::exception& e) {
-        throw std::runtime_error(std::string("detect_faces failed: ") + e.what());
-    }
-}
-
 // ====== Action Detector ======
 
 std::unique_ptr<ActionDetectorWrapper> create_action_detector(
@@ -119,31 +95,6 @@ std::unique_ptr<ActionDetectorWrapper> create_action_detector(
     config.is_async = true;
 
     return std::make_unique<ActionDetectorWrapper>(config);
-}
-
-rust::Vec<ActionResult> detect_actions(ActionDetectorWrapper& det, const FrameDataWrapper& frame) {
-    try {
-        det.detector->enqueue(frame.current_frame);
-        det.detector->submitRequest();
-        det.detector->wait();
-        auto results = det.detector->fetchResults();
-
-        rust::Vec<ActionResult> out;
-        for (const auto& r : results) {
-            ActionResult a;
-            a.x = r.rect.x;
-            a.y = r.rect.y;
-            a.width = r.rect.width;
-            a.height = r.rect.height;
-            a.detection_conf = r.detection_conf;
-            a.action_conf = r.action_conf;
-            a.label = r.label;
-            out.push_back(a);
-        }
-        return out;
-    } catch (const std::exception& e) {
-        throw std::runtime_error(std::string("detect_actions failed: ") + e.what());
-    }
 }
 
 // ====== Tracker ======
@@ -166,38 +117,6 @@ std::unique_ptr<ObjectTrackerWrapper> create_tracker(const TrackerConfig& config
         return std::make_unique<ObjectTrackerWrapper>(params);
     } catch (const std::exception& e) {
         throw std::runtime_error(std::string("create_tracker failed: ") + e.what());
-    }
-}
-
-rust::Vec<TrackedResult> track(ObjectTrackerWrapper& tracker,
-                               const rust::Vec<Detection>& detections,
-                               int32_t frame_idx,
-                               const FrameDataWrapper& frame) {
-    try {
-        TrackedObjects objs;
-        for (const auto& d : detections) {
-            TrackedObject obj(cv::Rect(d.x, d.y, d.width, d.height), d.confidence, d.label);
-            objs.push_back(obj);
-        }
-
-        tracker.tracker.Process(frame.current_frame, objs, frame_idx);
-        auto tracked = tracker.tracker.TrackedDetectionsWithLabels();
-
-        rust::Vec<TrackedResult> out;
-        for (const auto& t : tracked) {
-            TrackedResult r;
-            r.x = t.rect.x;
-            r.y = t.rect.y;
-            r.width = t.rect.width;
-            r.height = t.rect.height;
-            r.confidence = t.confidence;
-            r.object_id = t.object_id;
-            r.label = t.label;
-            out.push_back(r);
-        }
-        return out;
-    } catch (const std::exception& e) {
-        throw std::runtime_error(std::string("track failed: ") + e.what());
     }
 }
 
@@ -250,43 +169,6 @@ std::unique_ptr<FaceGalleryWrapper> create_gallery(
         fd_config, *wrapper->landmarks, *wrapper->reid, greedy_matching);
 
     return wrapper;
-}
-
-rust::Vec<int32_t> identify_faces(
-    FaceGalleryWrapper& gallery,
-    const FrameDataWrapper& frame,
-    const rust::Vec<Detection>& faces) {
-    try {
-        // Extract face ROIs
-        std::vector<cv::Mat> face_rois;
-        for (const auto& f : faces) {
-            cv::Rect rect(f.x, f.y, f.width, f.height);
-            cv::Rect clipped = rect & cv::Rect(0, 0, frame.current_frame.cols, frame.current_frame.rows);
-            if (clipped.area() > 0) {
-                face_rois.push_back(frame.current_frame(clipped));
-            } else {
-                face_rois.emplace_back();
-            }
-        }
-
-        // Compute landmarks + embeddings
-        std::vector<cv::Mat> landmarks, embeddings;
-        if (!face_rois.empty()) {
-            gallery.landmarks->Compute(face_rois, &landmarks, cv::Size(2, 5));
-            AlignFaces(&face_rois, &landmarks);
-            gallery.reid->Compute(face_rois, &embeddings);
-        }
-
-        auto ids = gallery.gallery->GetIDsByEmbeddings(embeddings);
-
-        rust::Vec<int32_t> out;
-        for (int id : ids) {
-            out.push_back(id);
-        }
-        return out;
-    } catch (const std::exception& e) {
-        throw std::runtime_error(std::string("identify_faces failed: ") + e.what());
-    }
 }
 
 rust::String get_gallery_label(const FaceGalleryWrapper& gallery, int32_t id) {

@@ -3,8 +3,8 @@ use crate::model::Device;
 use crate::Core;
 use crate::video::Frame;
 
-pub use openvino_vision_sys::Detection;
-pub use openvino_vision_sys::ActionResult;
+pub use ovi_vision_sys::Detection;
+pub use ovi_vision_sys::ActionResult;
 
 /// Builder for a face detector.
 pub struct FaceDetectorBuilder {
@@ -50,7 +50,7 @@ impl FaceDetectorBuilder {
     }
 
     pub fn build(self, core: &Core) -> Result<FaceDetector> {
-        let inner = openvino_vision_sys::create_face_detector(
+        let inner = ovi_vision_sys::create_face_detector(
             &core.inner,
             &self.model,
             self.device.as_str(),
@@ -65,7 +65,7 @@ impl FaceDetectorBuilder {
 
 /// Face detector wrapping OpenVINO inference.
 pub struct FaceDetector {
-    pub(crate) inner: cxx::UniquePtr<openvino_vision_sys::FaceDetectorWrapper>,
+    pub(crate) inner: cxx::UniquePtr<ovi_vision_sys::FaceDetectorWrapper>,
 }
 
 impl FaceDetector {
@@ -75,17 +75,17 @@ impl FaceDetector {
 
     /// Synchronous detection on a Frame reference.
     pub fn detect_frame(&mut self, frame: &Frame<'_>) -> Result<Vec<Detection>> {
-        Ok(openvino_vision_sys::detect_faces_frame(self.inner.pin_mut(), &frame.inner)?)
+        Ok(ovi_vision_sys::detect_faces_frame(self.inner.pin_mut(), &frame.inner)?)
     }
 
     /// Submit a frame for async inference. Call `fetch_results()` to get results.
     pub fn enqueue(&mut self, frame: &Frame<'_>) -> Result<()> {
-        Ok(openvino_vision_sys::enqueue_face_detection(self.inner.pin_mut(), &frame.inner)?)
+        Ok(ovi_vision_sys::enqueue_face_detection(self.inner.pin_mut(), &frame.inner)?)
     }
 
     /// Wait for and retrieve async inference results.
     pub fn fetch_results(&mut self) -> Result<Vec<Detection>> {
-        Ok(openvino_vision_sys::fetch_face_results(self.inner.pin_mut())?)
+        Ok(ovi_vision_sys::fetch_face_results(self.inner.pin_mut())?)
     }
 }
 
@@ -130,7 +130,7 @@ impl ActionDetectorBuilder {
     }
 
     pub fn build(self, core: &Core) -> Result<ActionDetector> {
-        let inner = openvino_vision_sys::create_action_detector(
+        let inner = ovi_vision_sys::create_action_detector(
             &core.inner,
             &self.model,
             self.device.as_str(),
@@ -144,7 +144,7 @@ impl ActionDetectorBuilder {
 
 /// Action detector wrapping OpenVINO inference.
 pub struct ActionDetector {
-    pub(crate) inner: cxx::UniquePtr<openvino_vision_sys::ActionDetectorWrapper>,
+    pub(crate) inner: cxx::UniquePtr<ovi_vision_sys::ActionDetectorWrapper>,
 }
 
 impl ActionDetector {
@@ -154,17 +154,17 @@ impl ActionDetector {
 
     /// Synchronous detection on a Frame reference.
     pub fn detect_frame(&mut self, frame: &Frame<'_>) -> Result<Vec<ActionResult>> {
-        Ok(openvino_vision_sys::detect_actions_frame(self.inner.pin_mut(), &frame.inner)?)
+        Ok(ovi_vision_sys::detect_actions_frame(self.inner.pin_mut(), &frame.inner)?)
     }
 
     /// Submit a frame for async inference. Call `fetch_results()` to get results.
     pub fn enqueue(&mut self, frame: &Frame<'_>) -> Result<()> {
-        Ok(openvino_vision_sys::enqueue_action_detection(self.inner.pin_mut(), &frame.inner)?)
+        Ok(ovi_vision_sys::enqueue_action_detection(self.inner.pin_mut(), &frame.inner)?)
     }
 
     /// Wait for and retrieve async inference results.
     pub fn fetch_results(&mut self) -> Result<Vec<ActionResult>> {
-        Ok(openvino_vision_sys::fetch_action_results(self.inner.pin_mut())?)
+        Ok(ovi_vision_sys::fetch_action_results(self.inner.pin_mut())?)
     }
 }
 

@@ -12,7 +12,7 @@
 
 #include "openvino/openvino.hpp"
 
-#include "openvino_vision/cnn.hpp"
+#include "ovi/vision/cnn.hpp"
 
 namespace detection {
 

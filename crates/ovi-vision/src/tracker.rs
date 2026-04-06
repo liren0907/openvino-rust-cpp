@@ -1,7 +1,7 @@
 use crate::error::Result;
 use crate::video::Frame;
 
-pub use openvino_vision_sys::{ActiveTrack, Detection, TrackPoint, TrackedResult};
+pub use ovi_vision_sys::{ActiveTrack, Detection, TrackPoint, TrackedResult};
 
 /// Configuration for the object tracker.
 #[derive(Debug, Clone)]
@@ -39,12 +39,12 @@ impl Default for TrackerConfig {
 
 /// Multi-object tracker using Hungarian algorithm.
 pub struct Tracker {
-    pub(crate) inner: cxx::UniquePtr<openvino_vision_sys::ObjectTrackerWrapper>,
+    pub(crate) inner: cxx::UniquePtr<ovi_vision_sys::ObjectTrackerWrapper>,
 }
 
 impl Tracker {
     pub fn new(config: &TrackerConfig) -> Result<Self> {
-        let sys_config = openvino_vision_sys::TrackerConfig {
+        let sys_config = ovi_vision_sys::TrackerConfig {
             min_track_duration: config.min_track_duration,
             forget_delay: config.forget_delay,
             affinity_thr: config.affinity_thr,
@@ -58,7 +58,7 @@ impl Tracker {
             averaging_window_size_for_rects: config.averaging_window_size_for_rects,
             averaging_window_size_for_labels: config.averaging_window_size_for_labels,
         };
-        let inner = openvino_vision_sys::create_tracker(&sys_config)?;
+        let inner = ovi_vision_sys::create_tracker(&sys_config)?;
         Ok(Self { inner })
     }
 
@@ -69,32 +69,32 @@ impl Tracker {
         frame_idx: i32,
         frame: &Frame<'_>,
     ) -> Result<Vec<TrackedResult>> {
-        Ok(openvino_vision_sys::track_frame(self.inner.pin_mut(), detections, frame_idx, &frame.inner)?)
+        Ok(ovi_vision_sys::track_frame(self.inner.pin_mut(), detections, frame_idx, &frame.inner)?)
     }
 
     /// Get active tracks with their trajectory points.
     pub fn active_tracks(&self) -> Result<Vec<ActiveTrack>> {
-        Ok(openvino_vision_sys::tracker_get_active_tracks(&self.inner)?)
+        Ok(ovi_vision_sys::tracker_get_active_tracks(&self.inner)?)
     }
 
     /// Check if a track has lasted long enough to be considered valid.
     pub fn is_track_valid(&self, id: i64) -> Result<bool> {
-        Ok(openvino_vision_sys::tracker_is_track_valid(&self.inner, id)?)
+        Ok(ovi_vision_sys::tracker_is_track_valid(&self.inner, id)?)
     }
 
     /// Check if a track has been forgotten (lost for too many frames).
     pub fn is_track_forgotten(&self, id: i64) -> Result<bool> {
-        Ok(openvino_vision_sys::tracker_is_track_forgotten(&self.inner, id)?)
+        Ok(ovi_vision_sys::tracker_is_track_forgotten(&self.inner, id)?)
     }
 
     /// Remove tracks that have been forgotten.
     pub fn drop_forgotten_tracks(&mut self) -> Result<()> {
-        Ok(openvino_vision_sys::tracker_drop_forgotten_tracks(self.inner.pin_mut())?)
+        Ok(ovi_vision_sys::tracker_drop_forgotten_tracks(self.inner.pin_mut())?)
     }
 
     /// Reset the tracker, clearing all tracks.
     pub fn reset(&mut self) -> Result<()> {
-        Ok(openvino_vision_sys::tracker_reset(self.inner.pin_mut())?)
+        Ok(ovi_vision_sys::tracker_reset(self.inner.pin_mut())?)
     }
 }
 

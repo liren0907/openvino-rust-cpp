@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(openvino_vision CXX)
+project(ovi_vision CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -28,18 +28,18 @@ set(SOURCES
 )
 
 # --- Define Static Library ---
-add_library(openvino_vision STATIC ${SOURCES})
+add_library(ovi_vision STATIC ${SOURCES})
 
 # --- Public Include Directory ---
-target_include_directories(openvino_vision PUBLIC
+target_include_directories(ovi_vision PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 # --- Link Libraries (PUBLIC so consumers inherit them) ---
-target_link_libraries(openvino_vision PUBLIC
+target_link_libraries(ovi_vision PUBLIC
     ${OpenCV_LIBS}
     openvino::runtime
 )
 
-message(STATUS "Configuring openvino_vision library")
+message(STATUS "Configuring ovi_vision library")
 message(STATUS "Sources: ${SOURCES}")
