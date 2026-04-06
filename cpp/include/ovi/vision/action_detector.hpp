@@ -26,14 +26,17 @@ struct DetectedAction {
     float detection_conf;
     /** @brief Confidence of predicted action */
     float action_conf;
+    /** @brief Per-class softmax scores for all action classes */
+    std::vector<float> action_scores;
 
     /**
     * @brief Constructor
     */
     DetectedAction(const cv::Rect& rect, int label,
-                   float detection_conf, float action_conf)
+                   float detection_conf, float action_conf,
+                   std::vector<float> action_scores = {})
         : rect(rect), label(label), detection_conf(detection_conf),
-          action_conf(action_conf) {}
+          action_conf(action_conf), action_scores(std::move(action_scores)) {}
 };
 using DetectedActions = std::vector<DetectedAction>;
 

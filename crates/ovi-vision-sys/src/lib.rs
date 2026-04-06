@@ -21,6 +21,7 @@ mod ffi {
         detection_conf: f32,
         action_conf: f32,
         label: i32,
+        action_scores: Vec<f32>,
     }
 
     /// Result from tracking.
@@ -62,6 +63,12 @@ mod ffi {
         points: Vec<LandmarkPoint>,
     }
 
+    /// Face embedding vector from re-identification model.
+    #[derive(Debug, Clone)]
+    struct FaceEmbedding {
+        embedding: Vec<f32>,
+    }
+
     /// Tracker configuration passed from Rust to C++.
     #[derive(Debug, Clone)]
     struct TrackerConfig {
@@ -89,6 +96,7 @@ mod ffi {
         type ActionDetectorWrapper;
         type ObjectTrackerWrapper;
         type LandmarksDetectorWrapper;
+        type FaceReidentifierWrapper;
         type FaceGalleryWrapper;
         type FrameRef;
 
@@ -143,6 +151,16 @@ mod ffi {
             frame: &FrameRef,
             faces: &Vec<Detection>,
         ) -> Result<Vec<FaceLandmarks>>;
+
+        // Standalone face embedding extraction
+        fn create_face_embedder(
+            core: &OvCore, model: &str, device: &str, max_batch_size: i32,
+        ) -> Result<UniquePtr<FaceReidentifierWrapper>>;
+        fn compute_embeddings(
+            embedder: Pin<&mut FaceReidentifierWrapper>,
+            frame: &FrameRef,
+            faces: &Vec<Detection>,
+        ) -> Result<Vec<FaceEmbedding>>;
 
         // Gallery (landmarks + reid + gallery combined)
         fn create_gallery(

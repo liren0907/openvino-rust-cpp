@@ -307,6 +307,13 @@ DetectedActions ActionDetection::GetDetections(const cv::Mat& loc, const cv::Mat
         }
         float action_conf = action_max_exp_value / action_sum_exp_values;
 
+        // Compute per-class softmax scores
+        std::vector<float> action_scores(m_config.num_action_classes);
+        for (size_t c = 0; c < m_config.num_action_classes; ++c) {
+            float exp_val = std::exp(scale * anchor_conf_data[action_conf_idx_shift + c * action_conf_step]);
+            action_scores[c] = exp_val / action_sum_exp_values;
+        }
+
         if (action_label < 0 || action_conf < m_config.action_confidence_threshold) {
             action_label = m_config.default_action_id;
             action_conf = 0.f;
@@ -327,7 +334,7 @@ DetectedActions ActionDetection::GetDetections(const cv::Mat& loc, const cv::Mat
 
         const auto det_rect = ConvertToRect(priorbox, variance, encoded_bbox, frame_size);
 
-        valid_detections.emplace_back(det_rect, action_label, detection_conf, action_conf);
+        valid_detections.emplace_back(det_rect, action_label, detection_conf, action_conf, std::move(action_scores));
     }
 
     std::vector<int> out_det_indices;

@@ -242,6 +242,61 @@ rust::Vec<FaceLandmarks> compute_landmarks(
     }
 }
 
+// ====== Standalone face embedding extraction ======
+
+std::unique_ptr<FaceReidentifierWrapper> create_face_embedder(
+    const OvCore& core, rust::Str model, rust::Str device, int32_t max_batch_size) {
+    try {
+        std::string model_str(model.data(), model.size());
+        std::string device_str(device.data(), device.size());
+        CnnConfig config(model_str, "Face Re-ID");
+        config.m_core = core.core;
+        config.m_deviceName = device_str;
+        config.m_max_batch_size = max_batch_size;
+        auto wrapper = std::make_unique<FaceReidentifierWrapper>();
+        wrapper->detector = std::make_unique<VectorCNN>(config);
+        return wrapper;
+    } catch (const std::exception& e) {
+        throw std::runtime_error(std::string("create_face_embedder failed: ") + e.what());
+    }
+}
+
+rust::Vec<FaceEmbedding> compute_embeddings(
+    FaceReidentifierWrapper& embedder, const FrameRef& frame, const rust::Vec<Detection>& faces) {
+    try {
+        require_frame(frame, "compute_embeddings");
+        std::vector<cv::Mat> face_rois;
+        for (const auto& f : faces) {
+            cv::Rect rect(f.x, f.y, f.width, f.height);
+            cv::Rect clipped = rect & cv::Rect(0, 0, frame.mat->cols, frame.mat->rows);
+            if (clipped.area() > 0) {
+                face_rois.push_back((*frame.mat)(clipped));
+            } else {
+                face_rois.emplace_back();
+            }
+        }
+
+        std::vector<cv::Mat> embeddings_raw;
+        if (!face_rois.empty()) {
+            embedder.detector->Compute(face_rois, &embeddings_raw);
+        }
+
+        rust::Vec<FaceEmbedding> out;
+        for (const auto& emb : embeddings_raw) {
+            FaceEmbedding fe;
+            rust::Vec<float> values;
+            for (int i = 0; i < emb.total(); ++i) {
+                values.push_back(emb.at<float>(i));
+            }
+            fe.embedding = std::move(values);
+            out.push_back(std::move(fe));
+        }
+        return out;
+    } catch (const std::exception& e) {
+        throw std::runtime_error(std::string("compute_embeddings failed: ") + e.what());
+    }
+}
+
 // ====== Gallery API expansion ======
 
 rust::Vec<rust::String> gallery_get_all_labels(const FaceGalleryWrapper& gallery) {
@@ -317,6 +372,9 @@ rust::Vec<ActionResult> detect_actions_frame(ActionDetectorWrapper& det, const F
             a.detection_conf = r.detection_conf;
             a.action_conf = r.action_conf;
             a.label = r.label;
+            for (float s : r.action_scores) {
+                a.action_scores.push_back(s);
+            }
             out.push_back(a);
         }
         return out;
@@ -510,6 +568,9 @@ rust::Vec<ActionResult> fetch_action_results(ActionDetectorWrapper& det) {
             a.detection_conf = r.detection_conf;
             a.action_conf = r.action_conf;
             a.label = r.label;
+            for (float s : r.action_scores) {
+                a.action_scores.push_back(s);
+            }
             out.push_back(a);
         }
         return out;

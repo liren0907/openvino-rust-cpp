@@ -10,6 +10,7 @@ pub mod detector;
 pub mod tracker;
 pub mod reid;
 pub mod landmarks;
+pub mod embedder;
 pub mod video;
 pub mod output;
 pub use error::{Error, Result};
@@ -18,6 +19,7 @@ pub use detector::{FaceDetector, FaceDetectorBuilder, ActionDetector, ActionDete
 pub use tracker::{Tracker, TrackerConfig, TrackedResult, TrackPoint, ActiveTrack};
 pub use reid::{FaceGallery, FaceGalleryBuilder};
 pub use landmarks::{LandmarksDetector, LandmarksDetectorBuilder, LandmarkPoint, FaceLandmarks};
+pub use embedder::{FaceEmbedder, FaceEmbedderBuilder, FaceEmbedding};
 pub use video::{Video, Frame};
 pub use output::{AnnotatedFrame, VideoWriter, Color};
 

@@ -123,6 +123,12 @@ std::unique_ptr<LandmarksDetectorWrapper> create_landmarks_detector(
 rust::Vec<FaceLandmarks> compute_landmarks(
     LandmarksDetectorWrapper& det, const FrameRef& frame, const rust::Vec<Detection>& faces);
 
+// Standalone face embedding extraction
+std::unique_ptr<FaceReidentifierWrapper> create_face_embedder(
+    const OvCore& core, rust::Str model, rust::Str device, int32_t max_batch_size);
+rust::Vec<FaceEmbedding> compute_embeddings(
+    FaceReidentifierWrapper& embedder, const FrameRef& frame, const rust::Vec<Detection>& faces);
+
 // Gallery API expansion
 rust::Vec<rust::String> gallery_get_all_labels(const FaceGalleryWrapper& gallery);
 bool gallery_label_exists(const FaceGalleryWrapper& gallery, rust::Str label);
