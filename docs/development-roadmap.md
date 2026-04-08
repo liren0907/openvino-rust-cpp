@@ -108,11 +108,11 @@ Remaining phases (documented in [architecture-plan.md](architecture-plan.md)):
 
 ## Recommended Next Steps
 
-Direction 1 is mostly complete — the high-impact API gaps (landmarks, tracker, camera, gallery) are filled. The remaining gaps (per-action confidence, batch inference, metrics, logging) are lower priority and can be addressed incrementally.
+Direction 1 is mostly complete — per-action confidence and standalone FaceEmbedder added. Remaining gaps (metrics, logging) are skipped — better solved in pure Rust.
 
 Direction 2 (publishing foundation) is done — LICENSE, Cargo.toml metadata, deprecated methods removed.
 
-**Next: Direction 3 Phase 2 (umbrella crate) or Direction 1 remaining gaps, depending on priorities.**
+**Next: Direction 4 — Audio domain (`ovi-audio`).** Full plan documented in [audio-domain-plan.md](audio-domain-plan.md). Requires installing `openvino.genai` C++ library first (build from source against Homebrew OpenVINO). Will trigger `ovi-core` extraction and umbrella crate creation.
 
 ---
 
